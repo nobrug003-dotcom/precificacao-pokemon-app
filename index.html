@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avaliação da Conta Pokémon GO</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #d11a2a;
+        }
+        .form-section {
+            border-bottom: 2px solid #eee;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+        }
+        .form-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select {
+            width: 95%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #d11a2a;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+        button:hover {
+            background-color: #a31520;
+        }
+        #resultado-pokemon, #resultado-conta {
+            margin-top: 10px;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #2e8b57;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Avaliação da Conta Pokémon GO</h1>
+        
+        <div class="form-section">
+            <h2>Avaliar um Pokémon Individualmente</h2>
+            <label for="nomePokemon">Nome do Pokémon:</label>
+            <input type="text" id="nomePokemon" placeholder="Ex: Charizard">
+            
+            <label for="nivelPokemon">Nível do Pokémon:</label>
+            <input type="number" id="nivelPokemon" placeholder="Ex: 35" min="1" max="50">
+
+            <label for="shinyPokemon">É shiny?</label>
+            <select id="shinyPokemon">
+                <option value="false">Não</option>
+                <option value="true">Sim</option>
+            </select>
+
+            <button id="avaliarPokemonBtn">Avaliar Pokémon</button>
+            <div id="resultado-pokemon"></div>
+        </div>
+
+        <div class="form-section">
+            <h2>Avaliar a Conta Completa</h2>
+            <label for="nivelConta">Nível da Conta:</label>
+            <input type="number" id="nivelConta" placeholder="Ex: 40" min="1" max="50">
+            
+            <label for="stardust">Quantidade de Stardust:</label>
+            <input type="number" id="stardust" placeholder="Ex: 500000">
+
+            <button id="avaliarContaBtn">Avaliar Conta</button>
+            <div id="resultado-conta"></div>
+        </div>
+    </div>
+
+    <script>
+        // *** CORREÇÃO FINAL: Usando a URL que comprovadamente funciona no Firebase ***
+        // A função de precificação de Pokémon usa a URL antiga com o nome da função no final.
+        // A função de avaliação de conta usa a nova URL específica.
+        
+        const urlBasePokemon = 'https://precificarpokemon-4hu6su42xa-uc.a.run.app';
+        const urlBaseConta = 'https://avaliarconta-4hu6su42xa-uc.a.run.app';
+
+
+        // Lógica para o botão de Avaliar Pokémon
+        document.getElementById('avaliarPokemonBtn').addEventListener('click', async () => {
+            let nomePokemon = document.getElementById('nomePokemon').value;
+            const nivelPokemon = document.getElementById('nivelPokemon').value;
+            const shinyPokemon = document.getElementById('shinyPokemon').value;
+            
+            if (!nomePokemon || !nivelPokemon) {
+                alert("Por favor, preencha o nome e o nível do Pokémon.");
+                return;
+            }
+
+            nomePokemon = nomePokemon.charAt(0).toUpperCase() + nomePokemon.slice(1).toLowerCase();
+            const nomeFinal = shinyPokemon === 'true' ? `${nomePokemon}-shiny` : nomePokemon;
+            const resultadoDiv = document.getElementById('resultado-pokemon');
+            resultadoDiv.textContent = 'Calculando...';
+
+            try {
+                // Aqui usamos a URL antiga que comprovadamente funciona para esta função
+                const response = await fetch(`${urlBasePokemon}/precificarPokemon?nome=${nomeFinal}&nivel=${nivelPokemon}`);
+                const data = await response.json();
+
+                if (response.ok) {
+                    resultadoDiv.textContent = `Valor do Pokémon: $${data.valor}`;
+                } else {
+                    resultadoDiv.textContent = `Erro: ${data.error}`;
+                }
+            } catch (error) {
+                console.error('Erro ao chamar a Cloud Function:', error);
+                resultadoDiv.textContent = 'Erro ao conectar com a API.';
+            }
+        });
+
+        // Lógica para o botão de Avaliar Conta
+        document.getElementById('avaliarContaBtn').addEventListener('click', async () => {
+            const nivelConta = document.getElementById('nivelConta').value;
+            const stardust = document.getElementById('stardust').value;
+            
+            if (!nivelConta || !stardust) {
+                alert("Por favor, preencha o nível da conta e a quantidade de stardust.");
+                return;
+            }
+
+            const resultadoDiv = document.getElementById('resultado-conta');
+            resultadoDiv.textContent = 'Calculando...';
+
+            try {
+                // Aqui usamos a NOVA URL DIRETA que comprovadamente funciona
+                const response = await fetch(urlBaseConta, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        nivelConta: parseInt(nivelConta), 
+                        stardust: parseInt(stardust)     
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    resultadoDiv.textContent = `Valor total da conta: $${data.valorTotal}`;
+                } else {
+                    resultadoDiv.textContent = `Erro: ${data.error}`;
+                }
+            } catch (error) {
+                console.error('Erro ao chamar a Cloud Function:', error);
+                resultadoDiv.textContent = 'Erro ao conectar com a API.';
+            }
+        });
+    </script>
+</body>
+</html>
