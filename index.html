@@ -104,12 +104,9 @@
     </div>
 
     <script>
-        // *** CORREÇÃO FINAL: Usando a URL que comprovadamente funciona no Firebase ***
-        // A função de precificação de Pokémon usa a URL antiga com o nome da função no final.
-        // A função de avaliação de conta usa a nova URL específica.
-        
-        const urlBasePokemon = 'https://precificarpokemon-4hu6su42xa-uc.a.run.app';
-        const urlBaseConta = 'https://avaliarconta-4hu6su42xa-uc.a.run.app';
+        // URLs das Funções (Comprovadamente Funcionais no Postman)
+        const urlPokemonFunction = 'https://precificarpokemon-4hu6su42xa-uc.a.run.app/precificarPokemon';
+        const urlContaFunction = 'https://avaliarconta-4hu6su42xa-uc.a.run.app';
 
 
         // Lógica para o botão de Avaliar Pokémon
@@ -129,8 +126,7 @@
             resultadoDiv.textContent = 'Calculando...';
 
             try {
-                // Aqui usamos a URL antiga que comprovadamente funciona para esta função
-                const response = await fetch(`${urlBasePokemon}/precificarPokemon?nome=${nomeFinal}&nivel=${nivelPokemon}`);
+                const response = await fetch(`${urlPokemonFunction}?nome=${nomeFinal}&nivel=${nivelPokemon}`);
                 const data = await response.json();
 
                 if (response.ok) {
@@ -139,7 +135,7 @@
                     resultadoDiv.textContent = `Erro: ${data.error}`;
                 }
             } catch (error) {
-                console.error('Erro ao chamar a Cloud Function:', error);
+                console.error('Erro ao chamar a Cloud Function (Pokemon):', error);
                 resultadoDiv.textContent = 'Erro ao conectar com a API.';
             }
         });
@@ -158,8 +154,8 @@
             resultadoDiv.textContent = 'Calculando...';
 
             try {
-                // Aqui usamos a NOVA URL DIRETA que comprovadamente funciona
-                const response = await fetch(urlBaseConta, {
+                // A requisição só será bem-sucedida se a permissão CORS foi liberada no Passo 1.
+                const response = await fetch(urlContaFunction, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -178,7 +174,7 @@
                     resultadoDiv.textContent = `Erro: ${data.error}`;
                 }
             } catch (error) {
-                console.error('Erro ao chamar a Cloud Function:', error);
+                console.error('Erro ao chamar a Cloud Function (Conta):', error);
                 resultadoDiv.textContent = 'Erro ao conectar com a API.';
             }
         });
