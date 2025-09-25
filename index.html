@@ -111,7 +111,7 @@
 
         // Lógica para o botão de Avaliar Pokémon
         document.getElementById('avaliarPokemonBtn').addEventListener('click', async () => {
-            let nomePokemon = document.getElementById('nomePokemon').value;
+            const nomePokemon = document.getElementById('nomePokemon').value.trim(); // Pega o nome
             const nivelPokemon = document.getElementById('nivelPokemon').value;
             const shinyPokemon = document.getElementById('shinyPokemon').value;
             
@@ -120,12 +120,15 @@
                 return;
             }
 
-            nomePokemon = nomePokemon.charAt(0).toUpperCase() + nomePokemon.slice(1).toLowerCase();
-            const nomeFinal = shinyPokemon === 'true' ? `${nomePokemon}-shiny` : nomePokemon;
+            // SIMPLIFICAÇÃO: O front-end só formata se é shiny ou não. O back-end faz a capitalização.
+            const nomeBase = nomePokemon.toLowerCase();
+            const nomeFinal = shinyPokemon === 'true' ? `${nomeBase}-shiny` : nomeBase;
+            
             const resultadoDiv = document.getElementById('resultado-pokemon');
             resultadoDiv.textContent = 'Calculando...';
 
             try {
+                // Envia o nome em minúsculas (ex: 'pikachu' ou 'pikachu-shiny')
                 const response = await fetch(`${urlPokemonFunction}?nome=${nomeFinal}&nivel=${nivelPokemon}`);
                 const data = await response.json();
 
@@ -140,7 +143,7 @@
             }
         });
 
-        // Lógica para o botão de Avaliar Conta
+        // Lógica para o botão de Avaliar Conta (JÁ FUNCIONA)
         document.getElementById('avaliarContaBtn').addEventListener('click', async () => {
             const nivelConta = document.getElementById('nivelConta').value;
             const stardust = document.getElementById('stardust').value;
@@ -154,7 +157,6 @@
             resultadoDiv.textContent = 'Calculando...';
 
             try {
-                // A requisição só será bem-sucedida se a permissão CORS foi liberada no Passo 1.
                 const response = await fetch(urlContaFunction, {
                     method: 'POST',
                     headers: {
