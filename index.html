@@ -6,14 +6,14 @@
     <title>Plataforma DexCoin - Dashboard de Avaliação</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <style>
-        /* AJUSTES DE DESIGN BASEADOS NO MODELO READYY (Passo 2) */
+        /* AJUSTES DE DESIGN BASEADOS NO MODELO READYY */
         :root {
             /* Cores primárias e secundárias do modelo Readdy */
-            --primary-color: #3f51b5; /* Azul Escuro */
-            --secondary-color: #FFB300; /* Dourado/Âmbar para destaque */
+            --primary-color: #3f51b5; /* Azul Escuro (Para Sidebar e Textos) */
+            --secondary-color: #FFB300; /* Dourado/Âmbar (Para Destaques) */
             --background-color: #f8f9fa; /* Fundo mais claro */
             --card-background: #ffffff;
-            --text-color: #212529; /* Texto mais escuro */
+            --text-color: #212529; 
             --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             --border-radius: 8px;
         }
@@ -29,16 +29,16 @@
         /* Layout Principal */
         .dashboard-container {
             display: grid;
-            grid-template-columns: 280px 1fr; /* Sidebar um pouco mais larga */
+            grid-template-columns: 280px 1fr; 
             min-height: 100vh;
         }
 
-        /* Sidebar (Menu) - Mais clean e profissional */
+        /* Sidebar (Menu) */
         .sidebar {
             background-color: var(--primary-color);
             color: white;
-            padding: 30px 20px; /* Mais padding vertical */
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.15); /* Sombra mais suave */
+            padding: 30px 20px; 
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.15); 
         }
 
         .sidebar h1 {
@@ -67,7 +67,7 @@
         }
 
         .nav-link.active {
-            background-color: var(--secondary-color); /* Dourado no item ativo */
+            background-color: var(--secondary-color); 
             color: var(--text-color);
             font-weight: 700;
             box-shadow: var(--shadow);
@@ -75,7 +75,7 @@
 
         /* Área de Conteúdo Principal */
         .main-content {
-            padding: 40px; /* Mais espaço interno */
+            padding: 40px; 
             overflow-y: auto;
         }
 
@@ -101,7 +101,7 @@
         }
 
         .card h2 {
-            border-bottom: 3px solid var(--secondary-color); /* Linha dourada de destaque */
+            border-bottom: 3px solid var(--secondary-color); 
             padding-bottom: 15px;
             margin-top: 0;
             margin-bottom: 30px;
@@ -186,6 +186,39 @@
              color: #dc3545;
         }
 
+        /* Estilos do Passo 2 para Refinamento Estético - Card de Serviços */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 20px;
+        }
+        .service-card {
+            background-color: #f1f1f1;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: transform 0.3s;
+        }
+        .service-card:hover {
+            transform: translateY(-5px);
+        }
+        .service-card h3 {
+            color: var(--primary-color);
+            margin-top: 10px;
+            font-size: 1.4rem;
+        }
+        .service-card p {
+            color: #6c757d;
+            font-size: 0.95rem;
+        }
+        .service-icon {
+            font-size: 3rem;
+            color: var(--secondary-color);
+            margin-bottom: 10px;
+        }
+
         /* Lista de Pokémon (Avaliação Completa) */
         #pokemon-list {
             list-style: none;
@@ -203,13 +236,6 @@
             margin-bottom: 10px;
             font-size: 1rem;
             font-weight: 500;
-        }
-        
-        /* Ícones Placeholder para Serviços */
-        .service-icon {
-            font-size: 3rem;
-            color: var(--secondary-color);
-            margin-bottom: 10px;
         }
     </style>
 </head>
@@ -326,9 +352,10 @@
     </div>
     
     <script>
-        // URL da sua Cloud Function (CORRETA)
-        const CLOUD_FUNCTION_URL = 'https://avaliarcontacompleta-4hu6su42xa-uc.a.run.app'; 
-        
+        // URLs das Cloud Functions (AGORA SÃO DUAS DIFERENTES)
+        const URL_POKEMON_FUNCTION_GET = 'https://precificarpokemon-4hu6su42xa-uc.a.run.app/precificarPokemon'; // Função Antiga (GET)
+        const CLOUD_FUNCTION_URL_CONTA_POST = 'https://avaliarcontacompleta-4hu6su42xa-uc.a.run.app'; // Função Conta (POST)
+
         let pokemonList = [];
 
         // --- Funções de Navegação (Dashboard) ---
@@ -344,7 +371,7 @@
             document.getElementById('nav-' + cardId.replace('-', '')).classList.add('active');
         }
 
-        // --- Função de Avaliação Única (LÓGICA CORRIGIDA) ---
+        // --- Função de Avaliação Única (AGORA USANDO O MÉTODO GET ANTIGO) ---
         async function avaliarPokemonUnico() {
             const name = document.getElementById('pokemon-name-single').value.trim();
             const level = parseInt(document.getElementById('pokemon-level-single').value);
@@ -358,29 +385,23 @@
                 return;
             }
 
-            // CORREÇÃO: Enviamos os campos account_level e stardust com valores padrão 
-            // para satisfazer a Cloud Function 'avaliarContaCompleta'
-            const payload = {
-                account_level: 40, 
-                stardust: 0, 
-                pokemon_list: [{ name: name.toLowerCase(), level: level, shiny: isShiny }]
-            };
+            // O nome do Pokémon deve ser minúsculo
+            const nameLower = name.toLowerCase();
+            const shinySuffix = isShiny ? '-shiny' : '';
+
+            // Construímos a URL com os parâmetros, como era na sua versão antiga que funcionava
+            const url = `${URL_POKEMON_FUNCTION_GET}?nome=${nameLower}${shinySuffix}&nivel=${level}`;
 
             try {
                 resultBox.style.display = 'block';
                 resultBox.className = 'result-box';
                 resultBox.innerHTML = 'Avaliando... Conectando à Cloud Function...';
 
-                const response = await fetch(CLOUD_FUNCTION_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
+                const response = await fetch(url);
                 const data = await response.json();
 
-                if (response.ok && data.total_value) {
-                    const value = parseFloat(data.total_value).toFixed(2); 
+                if (response.ok && data.valor) {
+                    const value = parseFloat(data.valor).toFixed(2); 
                     resultBox.className = 'result-box';
                     resultBox.innerHTML = `✅ Valor de Mercado: **${name.toUpperCase()}** vale **${value} DexCoin**!`;
                 } else {
@@ -406,6 +427,7 @@
                 return;
             }
 
+            // Adiciona como shiny=false por padrão aqui
             const newPokemon = { name: name.toLowerCase(), level: level, shiny: false }; 
             pokemonList.push(newPokemon);
             updatePokemonListDisplay();
@@ -450,13 +472,14 @@
                 stardust: stardust,
                 pokemon_list: pokemonList
             };
-
+            
+            // ATENÇÃO: ESSA FUNÇÃO AINDA PODE FALHAR ATÉ QUE SEU BACKEND SEJA CORRIGIDO!
             try {
                 resultBox.style.display = 'block';
                 resultBox.className = 'result-box';
                 resultBox.innerHTML = 'Avaliando Conta... Gerando Tokens...';
 
-                const response = await fetch(CLOUD_FUNCTION_URL, {
+                const response = await fetch(CLOUD_FUNCTION_URL_CONTA_POST, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
@@ -475,6 +498,7 @@
                         Valor de Mercado em **Tokens**: **${tokenValue} TK**
                     `;
                 } else {
+                    // O erro de "Dados incompletos" virá daqui
                     resultBox.className = 'result-box error';
                     resultBox.innerHTML = `❌ Erro na avaliação da conta. ${data.error || 'Verifique sua conexão e a Cloud Function.'}`;
                 }
