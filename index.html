@@ -4,19 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Plataforma DexCoin - Dashboard de Avaliação</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <style>
+        /* AJUSTES DE DESIGN BASEADOS NO MODELO READYY (Passo 2) */
         :root {
-            --primary-color: #3f51b5; /* Azul Pokémon Escuro */
-            --secondary-color: #f44336; /* Vermelho Pokébola */
-            --background-color: #f5f7fa;
+            /* Cores primárias e secundárias do modelo Readdy */
+            --primary-color: #3f51b5; /* Azul Escuro */
+            --secondary-color: #FFB300; /* Dourado/Âmbar para destaque */
+            --background-color: #f8f9fa; /* Fundo mais claro */
             --card-background: #ffffff;
-            --text-color: #333333;
-            --shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            --text-color: #212529; /* Texto mais escuro */
+            --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            --border-radius: 8px;
         }
 
         body {
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
             background-color: var(--background-color);
@@ -26,102 +29,117 @@
         /* Layout Principal */
         .dashboard-container {
             display: grid;
-            grid-template-columns: 250px 1fr; /* Sidebar e Conteúdo */
+            grid-template-columns: 280px 1fr; /* Sidebar um pouco mais larga */
             min-height: 100vh;
         }
 
-        /* Sidebar (Menu) */
+        /* Sidebar (Menu) - Mais clean e profissional */
         .sidebar {
             background-color: var(--primary-color);
             color: white;
-            padding: 20px;
-            box-shadow: var(--shadow);
+            padding: 30px 20px; /* Mais padding vertical */
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.15); /* Sombra mais suave */
         }
 
         .sidebar h1 {
             text-align: center;
-            font-size: 1.5rem;
-            margin-bottom: 30px;
+            font-size: 1.8rem;
+            margin-bottom: 40px;
             font-weight: 700;
+            letter-spacing: 0.5px;
         }
 
         .nav-link {
-            display: block;
-            padding: 12px 15px;
-            margin-bottom: 10px;
-            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            margin-bottom: 8px;
+            border-radius: var(--border-radius);
             cursor: pointer;
-            transition: background-color 0.3s, opacity 0.3s;
+            transition: background-color 0.3s, transform 0.1s;
             font-size: 1rem;
+            font-weight: 500;
         }
 
-        .nav-link:hover, .nav-link.active {
-            background-color: rgba(255, 255, 255, 0.2);
+        .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .nav-link.active {
+            background-color: var(--secondary-color); /* Dourado no item ativo */
+            color: var(--text-color);
+            font-weight: 700;
+            box-shadow: var(--shadow);
         }
 
         /* Área de Conteúdo Principal */
         .main-content {
-            padding: 30px;
+            padding: 40px; /* Mais espaço interno */
             overflow-y: auto;
         }
 
         .dashboard-header {
-            margin-bottom: 30px;
-            font-size: 1.8rem;
-            font-weight: 600;
+            margin-bottom: 40px;
+            font-size: 2rem;
+            font-weight: 900;
             color: var(--primary-color);
         }
 
         /* Cards e Formulários */
         .card {
             background-color: var(--card-background);
-            padding: 30px;
-            border-radius: 12px;
+            padding: 40px;
+            border-radius: var(--border-radius);
             box-shadow: var(--shadow);
             margin-bottom: 40px;
-            display: none; /* Esconde todas as abas por padrão */
+            display: none; 
         }
         
         .card.active {
-            display: block; /* Mostra a aba ativa */
+            display: block; 
         }
 
         .card h2 {
-            border-bottom: 2px solid var(--primary-color);
+            border-bottom: 3px solid var(--secondary-color); /* Linha dourada de destaque */
             padding-bottom: 15px;
             margin-top: 0;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
             color: var(--primary-color);
-            font-size: 1.5rem;
+            font-size: 1.7rem;
+            font-weight: 700;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
         label {
             display: block;
             margin-bottom: 8px;
-            font-weight: 600;
-            font-size: 0.9rem;
+            font-weight: 500;
+            font-size: 1rem;
+            color: #495057;
         }
 
         input[type="text"], input[type="number"], select {
-            width: calc(100% - 20px);
-            padding: 10px;
-            border: 1px solid #cccccc;
+            width: calc(100% - 22px);
+            padding: 12px;
+            border: 1px solid #ced4da;
             border-radius: 6px;
             font-size: 1rem;
-            transition: border-color 0.3s;
+            transition: border-color 0.3s, box-shadow 0.3s;
         }
 
         input[type="text"]:focus, input[type="number"]:focus, select:focus {
             border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(63, 81, 181, 0.25);
             outline: none;
         }
 
+        /* Botão Vermelho (Avaliar) */
         button {
-            background-color: var(--secondary-color);
+            background-color: #dc3545; /* Vermelho mais vibrante */
             color: white;
             border: none;
             padding: 12px 25px;
@@ -133,35 +151,46 @@
         }
 
         button:hover {
-            background-color: #d32f2f; /* Tom mais escuro do vermelho */
+            background-color: #c82333;
         }
         
         button:active {
             transform: scale(0.98);
         }
+        
+        /* Botão Verde (Avaliar Conta) */
+        .btn-success {
+             background-color: #28a745 !important;
+             margin-top: 20px; 
+             width: 100%;
+        }
+        
+        .btn-success:hover {
+             background-color: #218838 !important;
+        }
 
         .result-box {
-            margin-top: 25px;
-            padding: 15px;
-            background-color: #e8eaf6; /* Azul claro para o fundo do resultado */
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #e3f2fd; /* Azul claro para o fundo do resultado */
             border: 1px solid var(--primary-color);
             border-radius: 8px;
-            font-size: 1.1rem;
-            font-weight: 600;
+            font-size: 1.2rem;
+            font-weight: 700;
             text-align: center;
         }
         
         .result-box.error {
-             background-color: #ffcdd2; /* Fundo vermelho claro para erros */
-             border-color: var(--secondary-color);
-             color: var(--secondary-color);
+             background-color: #ffebee; /* Fundo vermelho claro para erros */
+             border-color: #dc3545;
+             color: #dc3545;
         }
 
-        /* Estilos da Lista de Pokémon (Avaliação Completa) */
+        /* Lista de Pokémon (Avaliação Completa) */
         #pokemon-list {
             list-style: none;
             padding: 0;
-            margin-top: 20px;
+            margin-top: 25px;
         }
 
         #pokemon-list li {
@@ -172,53 +201,15 @@
             padding: 10px 15px;
             border-radius: 6px;
             margin-bottom: 10px;
-            font-size: 0.95rem;
-        }
-
-        #pokemon-list li button {
-            background-color: #9e9e9e; /* Cinza para remover */
-            padding: 5px 10px;
-            font-size: 0.8rem;
+            font-size: 1rem;
+            font-weight: 500;
         }
         
-        #pokemon-list li button:hover {
-            background-color: #757575;
-        }
-        
-        /* Área de Produtos/Serviços */
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-        
-        .service-card {
-            background-color: var(--card-background);
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: var(--shadow);
-            text-align: center;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-        
-        .service-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-        }
-        
-        .service-card h3 {
-            color: var(--primary-color);
-            font-size: 1.3rem;
-        }
-        
-        .service-card p {
-            font-size: 0.9rem;
-            color: #666;
-        }
-        
-        .service-card button {
-            background-color: var(--primary-color);
+        /* Ícones Placeholder para Serviços */
+        .service-icon {
+            font-size: 3rem;
+            color: var(--secondary-color);
+            margin-bottom: 10px;
         }
     </style>
 </head>
@@ -300,7 +291,7 @@
                 <ul id="pokemon-list">
                     </ul>
                 
-                <button onclick="avaliarContaCompleta()" style="margin-top: 20px; width: 100%; background-color: #4CAF50;">Avaliar Conta Completa (Gerar Tokens)</button>
+                <button onclick="avaliarContaCompleta()" class="btn-success">Avaliar Conta Completa (Gerar Tokens)</button>
                 
                 <div id="result-multi" class="result-box" style="display: none;"></div>
             </div>
@@ -310,21 +301,24 @@
                 
                 <div class="services-grid">
                     <div class="service-card">
+                        <div class="service-icon">⭐</div>
                         <h3>DexCoin NFT Genesis</h3>
                         <p>Tokens não-fungíveis de Pokémon raros, lastreados em DexCoin.</p>
-                        <button>Ver Coleção</button>
+                        <button style="background-color: var(--primary-color);">Ver Coleção</button>
                     </div>
                     
                     <div class="service-card">
+                        <div class="service-icon">🎓</div>
                         <h3>Consultoria ProPlayer</h3>
                         <p>Avaliação detalhada de times competitivos e sugestões de investimento em DexCoin.</p>
-                        <button>Agendar</button>
+                        <button style="background-color: var(--primary-color);">Agendar</button>
                     </div>
                     
                     <div class="service-card">
+                        <div class="service-icon">🛍️</div>
                         <h3>Merchandising Exclusivo</h3>
                         <p>Acesso antecipado a produtos temáticos com pagamento em DexCoin.</p>
-                        <button>Comprar</button>
+                        <button style="background-color: var(--primary-color);">Comprar</button>
                     </div>
                 </div>
             </div>
@@ -332,29 +326,25 @@
     </div>
     
     <script>
-        // URL da sua Cloud Function (CORRETA E JÁ INSERIDA)
+        // URL da sua Cloud Function (CORRETA)
         const CLOUD_FUNCTION_URL = 'https://avaliarcontacompleta-4hu6su42xa-uc.a.run.app'; 
         
         let pokemonList = [];
 
         // --- Funções de Navegação (Dashboard) ---
         function showCard(cardId) {
-            // Esconde todos os cards de conteúdo
             document.querySelectorAll('.card').forEach(card => {
                 card.classList.remove('active');
             });
-            // Remove o estado 'active' de todos os links
             document.querySelectorAll('.nav-link').forEach(link => {
                 link.classList.remove('active');
             });
 
-            // Mostra o card selecionado
             document.getElementById(cardId).classList.add('active');
-            // Ativa o link de navegação selecionado
             document.getElementById('nav-' + cardId.replace('-', '')).classList.add('active');
         }
 
-        // --- Função de Avaliação Única ---
+        // --- Função de Avaliação Única (LÓGICA CORRIGIDA) ---
         async function avaliarPokemonUnico() {
             const name = document.getElementById('pokemon-name-single').value.trim();
             const level = parseInt(document.getElementById('pokemon-level-single').value);
@@ -368,11 +358,12 @@
                 return;
             }
 
-            // O endpoint da função de conta é usado, enviando apenas um item na lista de Pokémon
+            // CORREÇÃO: Enviamos os campos account_level e stardust com valores padrão 
+            // para satisfazer a Cloud Function 'avaliarContaCompleta'
             const payload = {
-                account_level: 40, // Valor padrão, não usado na lógica de cálculo de valor unitário
-                stardust: 0,
-                pokemon_list: [{ name: name, level: level, shiny: isShiny }]
+                account_level: 40, 
+                stardust: 0, 
+                pokemon_list: [{ name: name.toLowerCase(), level: level, shiny: isShiny }]
             };
 
             try {
@@ -389,7 +380,6 @@
                 const data = await response.json();
 
                 if (response.ok && data.total_value) {
-                    // Como a função retorna o valor total, ele é o valor do Pokémon único neste caso
                     const value = parseFloat(data.total_value).toFixed(2); 
                     resultBox.className = 'result-box';
                     resultBox.innerHTML = `✅ Valor de Mercado: **${name.toUpperCase()}** vale **${value} DexCoin**!`;
@@ -416,12 +406,10 @@
                 return;
             }
 
-            // O Shiny está fixo como false para a avaliação de conta completa
             const newPokemon = { name: name.toLowerCase(), level: level, shiny: false }; 
             pokemonList.push(newPokemon);
             updatePokemonListDisplay();
 
-            // Limpa os campos após adicionar
             nameInput.value = '';
             levelInput.value = '35';
         }
@@ -439,7 +427,7 @@
                 const li = document.createElement('li');
                 li.innerHTML = `
                     <span>${pokemon.name.toUpperCase()} (Nv ${pokemon.level})</span>
-                    <button onclick="removePokemon(${index})">Remover</button>
+                    <button onclick="removePokemon(${index})" style="background-color: #6c757d;">Remover</button>
                 `;
                 listElement.appendChild(li);
             });
@@ -478,7 +466,7 @@
                 
                 if (response.ok && data.total_value) {
                     const totalValue = parseFloat(data.total_value).toFixed(2);
-                    const tokenValue = (totalValue / 10).toFixed(2); // Lógica: 10 DexCoin = 1 Token
+                    const tokenValue = (totalValue / 10).toFixed(2); 
 
                     resultBox.className = 'result-box';
                     resultBox.innerHTML = `
